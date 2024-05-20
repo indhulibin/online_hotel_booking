@@ -12,6 +12,10 @@ use App\Http\Controllers\Admin\AdminPhotoController;
 use App\Http\Controllers\Admin\AdminVideoController;
 use App\Http\Controllers\Admin\AdminFaqController;
 use App\Http\Controllers\Admin\AdminPageController;
+use App\Http\Controllers\Admin\AdminSubscriberController;
+use App\Http\Controllers\Admin\AdminAmenityController;
+use App\Http\Controllers\Admin\AdminRoomController;
+
 
 use App\Http\Controllers\Front\HomeController;
 use App\Http\Controllers\Front\AboutController;
@@ -22,6 +26,7 @@ use App\Http\Controllers\Front\FaqController;
 use App\Http\Controllers\Front\TermConditionController;
 use App\Http\Controllers\Front\PrivacyPolicyController;
 use App\Http\Controllers\Front\ContactController;
+use App\Http\Controllers\Front\SubscriberController;
 
 
 
@@ -58,6 +63,10 @@ Route::get('/privacy_policy',[PrivacyPolicyController::class,'index'])->name('pr
 //ContactController
 Route::get('/contact',[ContactController::class,'index'])->name('contact');
 Route::post('/contact/send_email',[ContactController::class,'send_email'])->name('contact_send_email');
+
+//SubscriberController
+Route::post('/subscriber/send_email',[SubscriberController::class,'send_email'])->name('subceriber_send_email');
+Route::get('/subscriber/verify/{email}/{token}',[SubscriberController::class,'verify'])->name('subceriber_verify');
 
 /* Admin */
 
@@ -144,6 +153,8 @@ Route::post('/admin/faq/update/{id}',[AdminFaqController::class,'update'])->name
 Route::get('/admin/faq/delete/{id}',[AdminFaqController::class,'delete'])->name('faq_delete')->middleware('admin:admin');
 
 
+
+
 //AdminPageController
 
 //1.About
@@ -170,3 +181,51 @@ Route::post('/admin/page/faq/update',[AdminPageController::class,'faq_update'])-
 //7.Blog
 Route::get('/admin/page/blog/edit',[AdminPageController::class,'blog'])->name('blog_edit')->middleware('admin:admin');
 Route::post('/admin/page/blog/update',[AdminPageController::class,'blog_update'])->name('admin_page_blog_update')->middleware('admin:admin');
+//8 Cart
+Route::get('/admin/page/cart/edit',[AdminPageController::class,'cart'])->name('cart_edit')->middleware('admin:admin');
+Route::post('/admin/page/cart/update',[AdminPageController::class,'cart_update'])->name('admin_page_cart_update')->middleware('admin:admin');
+//9 Checkout
+Route::get('/admin/page/checkout/edit',[AdminPageController::class,'checkout'])->name('checkout_edit')->middleware('admin:admin');
+Route::post('/admin/page/checkout/update',[AdminPageController::class,'checkout_update'])->name('admin_page_checkout_update')->middleware('admin:admin');
+//10 Payment
+Route::get('/admin/page/payment/edit',[AdminPageController::class,'payment'])->name('payment_edit')->middleware('admin:admin');
+Route::post('/admin/page/payment/update',[AdminPageController::class,'payment_update'])->name('admin_page_payment_update')->middleware('admin:admin');
+//11 Signup
+Route::get('/admin/page/signup/edit',[AdminPageController::class,'signup'])->name('signup_edit')->middleware('admin:admin');
+Route::post('/admin/page/signup/update',[AdminPageController::class,'signup_update'])->name('admin_page_signup_update')->middleware('admin:admin');
+//12 Signin
+Route::get('/admin/page/signin/edit',[AdminPageController::class,'signin'])->name('signin_edit')->middleware('admin:admin');
+Route::post('/admin/page/signin/update',[AdminPageController::class,'signin_update'])->name('admin_page_signin_update')->middleware('admin:admin');
+
+
+
+
+//AdminSubscriberController
+Route::get('admin/subscriber/show',[AdminSubscriberController::class,'index'])->name('subscriber_show')->middleware('admin:admin');
+Route::get('admin/subscriber/send_email',[AdminSubscriberController::class,'send_mail'])->name('send_mail_to_subscriber')->middleware('admin:admin');
+Route::post('admin/subscriber/send_email/submit',[AdminSubscriberController::class,'send_mail_submision'])->name('mail_to_subsribers_submit')->middleware('admin:admin');
+
+
+
+//AdminAmenityController
+Route::get('admin/amenities/show',[AdminAmenityController::class,'index'])->name('amenity_show')->middleware('admin:admin');
+Route::get('admin/amenities/add',[AdminAmenityController::class,'add'])->name('amenity_add')->middleware('admin:admin');
+Route::post('/admin/amenities/store',[AdminAmenityController::class,'store'])->name('amenity_store')->middleware('admin:admin');
+Route::get('/admin/amenities/edit/{id}',[AdminAmenityController::class,'edit'])->name('amenity_edit')->middleware('admin:admin');
+Route::post('/admin/amenities/update/{id}',[AdminAmenityController::class,'update'])->name('amenity_update')->middleware('admin:admin');
+Route::get('/admin/amenities/delete/{id}',[AdminAmenityController::class,'delete'])->name('amenity_delete')->middleware('admin:admin');
+
+
+
+//AdminRoomController
+Route::get('admin/room/view',[AdminRoomController::class,'index'])->name('room_view')->middleware('admin:admin');
+Route::get('admin/room/add',[AdminRoomController::class,'add'])->name('room_add')->middleware('admin:admin');
+Route::post('admin/room/store',[AdminRoomController::class,'store'])->name('room_store')->middleware('admin:admin');
+Route::get('admin/room/edit/{id}',[AdminRoomController::class,'edit'])->name('room_edit')->middleware('admin:admin');
+Route::post('/admin/room/update/{id}',[AdminRoomController::class,'update'])->name('room_update')->middleware('admin:admin');
+Route::get('admin/room/delete/{id}',[AdminRoomController::class,'delete'])->name('room_delete')->middleware('admin:admin');
+
+Route::get('admin/room/photo/gallery/{id}',[AdminRoomController::class,'add_gallery'])->name('add_room_photo_gallery')->middleware('admin:admin');
+Route::post('admin/room/photo/gallery/store/{id}',[AdminRoomController::class,'store_gallery'])->name('room_photo_store')->middleware('admin:admin');
+Route::get('admin/room/photo/galery/delete/{room_id}/{photo}',[AdminRoomController::class,'delete_gallery'])->name('room_photo_delete')->middleware('admin:admin');
+

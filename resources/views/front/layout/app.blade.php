@@ -40,10 +40,21 @@
                     </div>
                     <div class="col-md-6 right-side">
                         <ul class="right">
-                            <li class="menu"><a href="cart.html">Cart</a></li>
-                            <li class="menu"><a href="checkout.html">Checkout</a></li>
-                            <li class="menu"><a href="signup.html">Sign Up</a></li>
-                            <li class="menu"><a href="login.html">Login</a></li>
+
+                            @if($global_page_data->cart_status == 1)
+                            <li class="menu"><a href="cart.html">{{$global_page_data->cart_heading}}</a></li>
+                            @endif
+
+                            @if($global_page_data->cart_status == 1)
+                            <li class="menu"><a href="checkout.html">{{$global_page_data->checkout_heading}}</a></li>
+                            @endif
+
+                            @if($global_page_data->signup_status == 1)
+                            <li class="menu"><a href="signup.html">{{$global_page_data->signup_heading}}</a></li>
+                            @endif
+                            @if($global_page_data->signup_status == 1)
+                            <li class="menu"><a href="login.html">{{$global_page_data->signin_heading}}</a></li>
+                            @endif
                         </ul>
                     </div>
                 </div>
@@ -250,9 +261,11 @@
                             <p>
                                 In order to get the latest news and other great items, please subscribe us here: 
                             </p>
-                            <form action="" method="post">
+                            <form class="from_subscriber_ajax" action="{{ route('subceriber_send_email') }}" method="post">
+                                @csrf
                                 <div class="form-group">
-                                    <input type="text" name="" class="form-control">
+                                    <input type="text"  name="email" class="form-control">
+                                    <span class="text-danger error-text email_error"></span>
                                 </div>
                                 <div class="form-group">
                                     <input type="submit" class="btn btn-primary" value="Subscribe Now">
@@ -273,7 +286,70 @@
             <i class="fa fa-angle-up"></i>
         </div>
 		
-        @include('front.layout.script_footer')    
-		
+        @include('front.layout.script_footer')  
+
+        <script>
+            (function($){
+                $(".from_subscriber_ajax").on('submit', function(e){
+                    e.preventDefault();
+                    $('#loader').show();
+                    var form = this;
+                    $.ajax({
+                        url:$(form).attr('action'),
+                        method:$(form).attr('method'),
+                        data:new FormData(form),
+                        processData:false,
+                        dataType:'json',
+                        contentType:false,
+                        beforeSend:function(){
+                            $(form).find('span.error-text').text('');
+                        },
+                        success:function(data)
+                        {
+                            $('#loader').hide();
+                            if(data.code == 0)
+                            {
+                                $.each(data.error_message, function(prefix, val) {
+                                    $(form).find('span.'+prefix+'_error').text(val[0]);
+                                });
+                            }
+                            else if(data.code == 1)
+                            {
+                                $(form)[0].reset();
+                                iziToast.success({
+                                    title: '',
+                                    position: 'center',
+                                    message: data.success_message,
+                                });
+                            }
+                            
+                        }
+                    });
+                });
+            })(jQuery);
+        </script>
+        <div id="loader"></div>
+
+        <!-- Flash error message database-->
+        @if(session()->get('error'))
+            <script>
+                iziToast.error({
+                    title:'',
+                    position:'topRight',
+                    message:'{{ session()->get('error') }}',
+                });
+            </script>
+        @endif
+
+        <!-- Flash success message database-->
+        @if(session()->get('success'))
+            <script>
+                iziToast.success({
+                    title:'',
+                    position:'topRight',
+                    message:'{{ session()->get('success') }}',
+                });
+            </script>
+        @endif
    </body>
 </html>

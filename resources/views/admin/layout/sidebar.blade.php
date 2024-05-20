@@ -11,6 +11,20 @@
 
             <li class="{{ Request::is('admin/home')? 'active':'' }}"><a class="nav-link" href="{{ route('admin_home') }}"><i class="fa fa-hand-o-right"></i> <span>Dashboard</span></a></li>
 
+            <li class="nav-item dropdown {{ Request::is('admin/amenity/show')||
+            Request::is('admin/room/view')
+            ? 'active':'' }}">
+            <a href="#" class="nav-link has-dropdown"><i class="fa fa-hand-o-right"></i><span>Hotel Section</span></a>
+            <ul class="dropdown-menu">
+
+                <li class="{{ Request::is('admin/amenity/show') ? 'active':'' }}"><a class="nav-link" href="{{ route('amenity_show') }}"><i class="fa fa-angle-right"></i>Amenities</a></li>  
+                
+                <li class="{{ Request::is('admin/room/view') ? 'active':'' }}"><a class="nav-link" href="{{ route('room_view') }}"><i class="fa fa-angle-right"></i>Rooms</a></li>    
+
+
+            </ul>
+        </li>
+
             <li class="nav-item dropdown {{ Request::is('admin/page/about/edit')|| 
                 Request::is('admin/page/terms/edit')|| 
                 Request::is('admin/page/privacy/edit')||
@@ -18,7 +32,12 @@
                 Request::is('/admin/page/photo_gallery/edit')||
                 Request::is('/admin/page/video_gallery/edit')||
                 Request::is('/admin/page/faq/edit')||
-                Request::is('/admin/page/blog/edit')
+                Request::is('/admin/page/blog/edit')||
+                Request::is('/admin/page/cart/edit')||
+                Request::is('/admin/page/checkout/edit')||
+                Request::is('/admin/page/payment/edit')||
+                Request::is('/admin/page/signup/edit')||
+                Request::is('/admin/page/signin/edit')
                 ? 'active':'' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="fa fa-hand-o-right"></i><span>Pages</span></a>
                 <ul class="dropdown-menu">
@@ -39,6 +58,18 @@
 
                     <li class="{{ Request::is('/admin/page/blog/edit')? 'active':'' }}"><a class="nav-link" href="{{ route('blog_edit') }}"><i class="fa fa-angle-right"></i>Blog</a></li>
 
+                    <li class="{{ Request::is('/admin/page/cart/edit')? 'active':'' }}"><a class="nav-link" href="{{ route('cart_edit') }}"><i class="fa fa-angle-right"></i>Cart</a></li>
+
+                    <li class="{{ Request::is('/admin/page/checkout/edit')? 'active':'' }}"><a class="nav-link" href="{{ route('checkout_edit') }}"><i class="fa fa-angle-right"></i>Checkout</a></li>
+
+                    <li class="{{ Request::is('/admin/page/payment/edit')? 'active':'' }}"><a class="nav-link" href="{{ route('payment_edit') }}"><i class="fa fa-angle-right"></i>Payment</a></li>
+
+                    <li class="{{ Request::is('/admin/page/signup/edit')? 'active':'' }}"><a class="nav-link" href="{{ route('signup_edit') }}"><i class="fa fa-angle-right"></i>SignUp</a></li>
+
+                    <li class="{{ Request::is('/admin/page/signin/edit')? 'active':'' }}"><a class="nav-link" href="{{ route('signin_edit') }}"><i class="fa fa-angle-right"></i>SignIn</a></li>
+
+                    
+
                 </ul>
             </li>
 
@@ -57,6 +88,18 @@
             <li class="{{ Request::is('admin/faq/view')? 'active':'' }}"><a class="nav-link" href="{{ route('faq_view') }}"><i class="fa fa-hand-o-right"></i> <span>FAQ</span></a></li>
 
 
+        <li class="nav-item dropdown {{ Request::is('admin/subscriber/show')||
+                                        Request::is('admin/subscriber/send_email')
+            ? 'active':'' }}">
+            <a href="#" class="nav-link has-dropdown"><i class="fa fa-hand-o-right"></i><span>Subscriber</span></a>
+            <ul class="dropdown-menu">
+
+                <li class="{{ Request::is('admin/subscriber/show') ? 'active':'' }}"><a class="nav-link" href="{{ route('subscriber_show') }}"><i class="fa fa-angle-right"></i> All Subscribers</a></li>  
+                
+                <li class="{{ Request::is('admin/subscriber/send_email') ? 'active':'' }}"><a class="nav-link" href="{{ route('send_mail_to_subscriber') }}"><i class="fa fa-angle-right"></i>Send Mail</a></li>  
+
+            </ul>
+        </li>
 
            <!-- <li class=""><a class="nav-link" href="setting.html"><i class="fa fa-hand-o-right"></i> <span>Setting</span></a></li>
 

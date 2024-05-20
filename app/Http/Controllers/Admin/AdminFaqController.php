@@ -58,6 +58,6 @@ class AdminFaqController extends Controller
     {
         $single_data = Faq::where('id',$id)->first();
         $single_data->delete();
-        return redirect()->back()->with('success','Post is deleted successfully');
+        return redirect()->back()->with('success','FAQ is deleted successfully');
     }
 }
