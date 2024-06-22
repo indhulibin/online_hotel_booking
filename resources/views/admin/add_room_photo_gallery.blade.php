@@ -47,22 +47,19 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @php
-                            $i=0;
-                            @endphp
-                            @for($j=0;$j<count($array);$j++)
+                            @foreach($room_photo_data as $item)
                             <tr>
-                                <td>{{ $i=$i+1 }}</td>
+                                <td>{{ $loop->iteration }}</td>
                                 <td>
                                     
-                                    <img src="{{ asset('uploads/'.$array[$j]) }}" alt="" class="w_200">
+                                    <img src="{{ asset('uploads/'.$item->photo) }}" alt="" class="w_100 h_100">
                                 </td>
                                 <td class="pt_10 pb_10">
-                                    <a href="{{ route('room_photo_delete',['room_id' => $id, 'photo' => $array[$j]]) }}" class="btn btn-danger" onClick="return confirm('Are you sure?');">Delete</a>
+                                    <a href="{{ route('room_photo_delete',$item->id) }}" class="btn btn-danger" onClick="return confirm('Are you sure?');">Delete</a>
                                 </td>
                                 
                             </tr>
-                            @endfor
+                            @endforeach
                             </tbody>
                         </table>
                     </div>

@@ -1,0 +1,19 @@
+Package
+
+stripe/stripe-php
+
+Controller
+
+use Stripe
+
+
+Publishable key :
+pk_test_51PQLDuLuT1HOFDi0Gi3JeuS917gXfiWbJtoODqxqfxqTkD8Pars1IW0kQJ5beE42f5DZ4Oc6bdyIBVLbbrx28JAq00g88qtIrq
+
+Secret key:
+sk_test_51PQLDuLuT1HOFDi0j6gZPbnMmoJbF42s73Lmmibljz9aq1de8qc3XhRxl0Pn4miMDVR9S7ExV5GtE2zAP0YFtQj000dKFEHBDt
+
+
+
+indhumoha19@gmail.com
+2015december27

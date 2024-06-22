@@ -42,19 +42,24 @@
                         <ul class="right">
 
                             @if($global_page_data->cart_status == 1)
-                            <li class="menu"><a href="cart.html">{{$global_page_data->cart_heading}}</a></li>
+                            <li class="menu"><a href="{{ route('cart_view') }}">{{$global_page_data->cart_heading}}</a></li>
                             @endif
 
                             @if($global_page_data->cart_status == 1)
-                            <li class="menu"><a href="checkout.html">{{$global_page_data->checkout_heading}}</a></li>
+                            <li class="menu"><a href="{{ route('checkout') }}">{{$global_page_data->checkout_heading}}</a></li>
+                            @endif
+                            @if(!Auth::guard('customer')->check())
+                                @if($global_page_data->signup_status == 1)
+                                <li class="menu"><a href="{{ route('customer_signup') }}">{{$global_page_data->signup_heading}}</a></li>
+                                @endif
+                                @if($global_page_data->signup_status == 1)
+                                <li class="menu"><a href="{{ route('customer_login') }}">{{$global_page_data->signin_heading}}</a></li>
+                                @endif
+                            @else
+                                <li class="menu"><a href="{{ route('customer_home') }}">Dashboard</a></li>
                             @endif
 
-                            @if($global_page_data->signup_status == 1)
-                            <li class="menu"><a href="signup.html">{{$global_page_data->signup_heading}}</a></li>
-                            @endif
-                            @if($global_page_data->signup_status == 1)
-                            <li class="menu"><a href="login.html">{{$global_page_data->signin_heading}}</a></li>
-                            @endif
+
                         </ul>
                     </div>
                 </div>
@@ -67,7 +72,7 @@
             <!-- Menu For Mobile Device -->
             <div class="mobile-nav">
                 <a href="index.html" class="logo">
-                    <img src="uploads/logo.png" alt="">
+                    <img src="{{ asset('uploads/logo.png') }}" alt="">
                 </a>
             </div>
         
@@ -76,7 +81,7 @@
                 <div class="container">
                     <nav class="navbar navbar-expand-md navbar-light">
                         <a class="navbar-brand" href="{{ route('home') }}">
-                            <img src="uploads/logo.png" alt="">
+                            <img src="{{ asset('uploads/logo.png') }}" alt="">
                         </a>
                         <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent">
                             <ul class="navbar-nav ml-auto">        
@@ -93,21 +98,11 @@
                                 <li class="nav-item">
                                     <a href="javascript:void;" class="nav-link dropdown-toggle">Room & Suite</a>
                                     <ul class="dropdown-menu">
+                                        @foreach($global_room_data as $room_data_item)
                                         <li class="nav-item">
-                                            <a href="room-detail.html" class="nav-link">Regular Couple Bed</a>
+                                            <a href="{{ route('room',$room_data_item->id) }}" class="nav-link">{{ $room_data_item->name }}</a>
                                         </li>
-                                        <li class="nav-item">
-                                            <a href="room-detail.html" class="nav-link">Delux Couple Bed</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="room-detail.html" class="nav-link">Regular Double Bed</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="room-detail.html" class="nav-link">Delux Double Bed</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="room-detail.html" class="nav-link">Premium Suite</a>
-                                        </li>
+                                        @endforeach
                                     </ul>
                                 </li>
                                 <li class="nav-item">
@@ -329,7 +324,7 @@
             })(jQuery);
         </script>
         <div id="loader"></div>
-
+       
         <!-- Flash error message database-->
         @if(session()->get('error'))
             <script>

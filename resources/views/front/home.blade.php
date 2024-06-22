@@ -24,41 +24,40 @@
  
     <div class="search-section">
         <div class="container">
-            <form action="cart.html" method="post">
-            <div class="inner">
-                <div class="row">
-                    <div class="col-lg-3">
-                        <div class="form-group">
-                            <select name="" class="form-select">
-                                <option value="">Select Room</option>
-                                <option value="">Standard Couple Bed Room</option>
-                                <option value="">Delux Couple Bed Room</option>
-                                <option value="">Standard Four Bed Room</option>
-                                <option value="">Delux Four Bed Room</option>
-                                <option value="">VIP Special Room</option>
-                            </select>
+            <form action="{{ route('cart_submit') }}" method="post">
+                @csrf
+                <div class="inner">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <select name="room_id" class="form-select">
+                                    <option value="">Select Room</option>
+                                    @foreach($room_all as $itemRoom)
+                                    <option value="{{ $itemRoom->id }}">{{ $itemRoom->name }}</option>
+                                    @endforeach  
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="form-group">
-                            <input type="text" name="checkin_checkout" class="form-control daterange1" placeholder="Checkin & Checkout">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <input type="text" name="checkin_checkout" class="form-control daterange1" placeholder="Checkin & Checkout">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-lg-2">
-                        <div class="form-group">
-                            <input type="number" name="" class="form-control" min="1" max="30" placeholder="Adults">
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <input type="number" name="adult" class="form-control" min="1" max="30" placeholder="Adults">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-lg-2">
-                        <div class="form-group">
-                            <input type="number" name="" class="form-control" min="1" max="30" placeholder="Children">
+                        <div class="col-lg-2">
+                            <div class="form-group">
+                                <input type="number" name="children" class="form-control" min="0" max="30" placeholder="Children">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-lg-2">
-                        <button type="submit" class="btn btn-primary">Book Now</button>
+                        <div class="col-lg-2">
+                            <button type="submit" class="btn btn-primary">Book Now</button>
+                        </div>
                     </div>
                 </div>
-            </div>
             </form>
         </div>
     </div>
@@ -95,139 +94,32 @@
                 </div>
             </div>
             <div class="row">
+                @foreach($room_all as $itemRoom)
+                @if($loop->iteration>4)
+                @break;
+                @endif
                 <div class="col-md-3">
                     <div class="inner">
                         <div class="photo">
-                            <img src="uploads/1.jpg" alt="">
+                            <img src="{{ asset('uploads/'.$itemRoom->featured_photo) }}" alt="">
                         </div>
                         <div class="text">
-                            <h2><a href="">Standard Couple Bed</a></h2>
+                            <h2><a href="{{ route('room',$itemRoom->id) }}">{{ $itemRoom->name }}</a></h2>
                             <div class="price">
-                                $100/night
+                                ${{ $itemRoom->price }}/night
                             </div>
                             <div class="button">
-                                <a href="room-detail.html" class="btn btn-primary">See Detail</a>
+                                <a href="{{ route('room',$itemRoom->id) }}" class="btn btn-primary">See Detail</a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="inner">
-                        <div class="photo">
-                            <img src="uploads/2.jpg" alt="">
-                        </div>
-                        <div class="text">
-                            <h2><a href="">Standard Couple Bed</a></h2>
-                            <div class="price">
-                                $100/night
-                            </div>
-                            <div class="button">
-                                <a href="room-detail.html" class="btn btn-primary">See Detail</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="inner">
-                        <div class="photo">
-                            <img src="uploads/3.jpg" alt="">
-                        </div>
-                        <div class="text">
-                            <h2><a href="">Standard Couple Bed</a></h2>
-                            <div class="price">
-                                $100/night
-                            </div>
-                            <div class="button">
-                                <a href="room-detail.html" class="btn btn-primary">See Detail</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="inner">
-                        <div class="photo">
-                            <img src="uploads/4.jpg" alt="">
-                        </div>
-                        <div class="text">
-                            <h2><a href="">Standard Couple Bed</a></h2>
-                            <div class="price">
-                                $100/night
-                            </div>
-                            <div class="button">
-                                <a href="room-detail.html" class="btn btn-primary">See Detail</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="inner">
-                        <div class="photo">
-                            <img src="uploads/5.jpg" alt="">
-                        </div>
-                        <div class="text">
-                            <h2><a href="">Standard Couple Bed</a></h2>
-                            <div class="price">
-                                $100/night
-                            </div>
-                            <div class="button">
-                                <a href="room-detail.html" class="btn btn-primary">See Detail</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="inner">
-                        <div class="photo">
-                            <img src="uploads/6.jpg" alt="">
-                        </div>
-                        <div class="text">
-                            <h2><a href="">Standard Couple Bed</a></h2>
-                            <div class="price">
-                                $100/night
-                            </div>
-                            <div class="button">
-                                <a href="room-detail.html" class="btn btn-primary">See Detail</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="inner">
-                        <div class="photo">
-                            <img src="uploads/7.jpg" alt="">
-                        </div>
-                        <div class="text">
-                            <h2><a href="">Standard Couple Bed</a></h2>
-                            <div class="price">
-                                $100/night
-                            </div>
-                            <div class="button">
-                                <a href="room-detail.html" class="btn btn-primary">See Detail</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="inner">
-                        <div class="photo">
-                            <img src="uploads/1.jpg" alt="">
-                        </div>
-                        <div class="text">
-                            <h2><a href="">Standard Couple Bed</a></h2>
-                            <div class="price">
-                                $100/night
-                            </div>
-                            <div class="button">
-                                <a href="room-detail.html" class="btn btn-primary">See Detail</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="big-button">
-                        <a href="" class="btn btn-primary">See All Rooms</a>
+                        <a href="{{ route('allrooms') }}" class="btn btn-primary">See All Rooms</a>
                     </div>
                 </div>
             </div>
@@ -305,6 +197,17 @@
            
         </div>
     </div>
-
+<!-- Flash error message default-->
+@if($errors->any())
+@foreach($errors->all() as $error)
+    <script>
+        iziToast.error({
+            title:'',
+            position:'topRight',
+            message:'{{ $error }}'
+        });
+    </script>
+@endforeach
+@endif
 
 @endsection

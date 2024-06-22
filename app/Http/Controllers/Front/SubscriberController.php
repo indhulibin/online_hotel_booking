@@ -58,7 +58,7 @@ class SubscriberController extends Controller
             return redirect()->route('home')->with('success','Your subcription is verified successfully');
         }
         else{
-            return redirect()->route('home')->with('success','Feature is added successfully');
+            return redirect()->route('home');
         }
 
     }

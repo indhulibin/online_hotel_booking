@@ -37,22 +37,22 @@
 		    {
 		        $('.paypal').show();
 		        $('.stripe').hide();
-		        $('.bank').hide();
-		        $('.cash-on-delivery').hide();
+		        //$('.bank').hide();
+		        //$('.cash-on-delivery').hide();
 		    }
 		    else if($('#paymentMethodChange').val() == 'Stripe')
 		    {
 		        $('.paypal').hide();
 		        $('.stripe').show();
-		        $('.bank').hide();
-		        $('.cash-on-delivery').hide();
+		        //$('.bank').hide();
+		        //$('.cash-on-delivery').hide();
 		    }
 		    else if($('#paymentMethodChange').val() == '')
 		    {
 		    	$('.paypal').hide();
 		        $('.stripe').hide();
-		        $('.bank').hide();
-		        $('.cash-on-delivery').hide();
+		        //$('.bank').hide();
+		        //$('.cash-on-delivery').hide();
 		    }
 
 		});

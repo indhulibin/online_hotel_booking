@@ -1,0 +1,31 @@
+developer account details
+email:indhumoha19@gmail.com
+password:Paypal2025
+
+
+https://www.sandbox.paypal.com/signin
+
+sandbox
+
+1. personal:
+   	indhu_hotel@personal.com
+	Paypal2025
+
+2.business
+	indhu_hotel@business.com
+	Paypal2025
+
+API credential
+APP Name:APP_ONLINE_HOTEL_BOOKING
+
+indhu_hotel@business.com
+
+APP_ONLINE_HOTEL_BOOKING_new
+
+Client ID:
+AbEz_AaFU0TX9fKJuC4v3bbpkePkvBJCD-l8gVEzEdNaDs1DKIicHz4Yv1OKzCaqsO0ujMYSuJhupXDu
+
+Secret key 1
+EO5_SsW0VW2tXyUbUk4sez1HuT_qyV3AP0lFvx4U1JiYYoTLvfXOUK-zk0LsNRK5EU7gIv7gPs6mXJ3Z
+
+

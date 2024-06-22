@@ -165,6 +165,12 @@ class AdminRoomController extends Controller
         $single_data = Room::where('id',$id)->first();
         unlink(public_path('uploads/'.$single_data->featured_photo));
         $single_data->delete();
+        $single_data_1 = RoomPhoto::where('room_id',$id)->get();
+        foreach( $single_data_1 as $item)
+        {
+            unlink(public_path('uploads/'.$item->photo));
+            $item->delete();
+        }
         return redirect()->back()->with('success','Room is deleted successfully');
     }
 
@@ -172,102 +178,44 @@ class AdminRoomController extends Controller
     {
        
         $room_data = Room::where('id',$id)->first();
-        $roomPhotos = RoomPhoto::where('room_id',$id)->get();
-         $allPhotos = [];
-         if ($roomPhotos->isNotEmpty()) 
-        {
-            // Iterate over the fetched room photos and merge them
-            foreach ($roomPhotos as $photo) {
-            $allPhotos = array_merge($allPhotos, explode(',', $photo->photo));
-            }
-
-            // Create the final merged array
-            $mergedArray = [
-                "id" => $roomPhotos->first()->id, // Assuming you want the ID of the first photo
-                "room_id" => $id,
-                "photo" => implode(',', $allPhotos),
-                "created_at" => $roomPhotos->first()->created_at, // Assuming you want the created_at of the first photo
-                "updated_at" => $roomPhotos->last()->updated_at, // Assuming you want the updated_at of the most recent photo
-            ];
-            $array = explode(',',$mergedArray['photo']);
-        } else {
-        // Handle the case where there are no photos
-        $mergedArray = [
-            "id" => null,
-            "room_id" => $id,
-            "photo" => '',
-            "created_at" => null,
-            "updated_at" => null,
-        ];
-
-        // Empty array since there are no photos
-        $array = [];
-        }
-        return view('admin.add_room_photo_gallery',compact('room_data','array','id'));
+        $room_photo_data = RoomPhoto::where('room_id',$id)->get();
+        return view('admin.add_room_photo_gallery',compact('room_data','room_photo_data'));
     }
 
     public function store_gallery(Request $request,$id)
     { 
-       
-        $obj = new RoomPhoto();
-        if ($request->hasfile('photo')) {
-            $photos ='';
-            $i = 0 ;
-            if ($request->hasfile('photo'))
+        $request->validate([
+            'photo' => 'required',
+            'photo.*' => 'image|mimes:jpg,jpeg,png,gif'
+        ]); 
+                 
+       if($photos = $request->file('photo'))
+       {
+            foreach($photos as $key => $item)
             {
-                foreach ($request->file('photo') as $file)
-                {
-                    if($i==0)
-                    {
-                        $final_name = time().".".$file->extension();
-                        $photos .=  $final_name;
-                        $file->move(public_path('uploads/'),$final_name);
-                    }
-                    else
-                    {
-                        $final_name = time().".".$file->extension();
-                        $photos .= ','.$final_name;
-                        $file->move(public_path('uploads/'),$final_name);
-                    }
-                    $i++;
-                }
-               
+                $ext = $item->extension();
+                $final_name = $key."-".time().".".$ext;
+
+                $item->move(public_path('uploads/'),$final_name);
+                $obj = new RoomPhoto();
+                $obj->room_id = $id;
+                $obj->photo = $final_name;
+                $obj->save();
             }
-           
-             
-               $obj->photo = $photos;
-               $obj->room_id = $id;
-               $obj->save();
-            
-        }
-        return redirect()->back()->with('success','Room photos are added successfully');
+       }
+       
+       return redirect()->back()->with('success','Room photo is added successfully');
+       
     }
 
-    public function delete_gallery($id,$photo)
+    public function delete_gallery($id)
     {
-
-        // Fetch the room data
-        $room = DB::table('room_photos')->where('room_id', $id)->first();
-
-        if ($room) {
-            // Get the existing photos
-            $photos = explode(',', $room->photo);
-
-            // Remove the specified photo
-            $photos = array_filter($photos, function($value) use ($photo) {
-                return $value != $photo;
-            });
-
-            // Update the room's photos
-            DB::table('room_photos')
-                ->where('room_id', $id)
-                ->update(['photo' => implode(',', $photos)]);
-                unlink(public_path('uploads/'.$photo));
-            // Optionally, delete the actual photo file from storage
-            // Storage::delete('public/' . $photo);
-        }
-
-        return redirect()->back()->with('success', 'Photo deleted successfully.');
+        $single_data = RoomPhoto::where('id',$id)->first();
+        unlink(public_path('uploads/'.$single_data->photo));
+        $single_data->delete();
+        return redirect()->back()->with('success','Room photo is deleted successfully');
     }
+
+   
 
 }

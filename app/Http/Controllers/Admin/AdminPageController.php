@@ -210,5 +210,18 @@ class AdminPageController extends Controller
        return redirect()->back()->with('success','SignIn data is updated successfully');
     }
 
+    public function rooms()
+    {
+        $page_data = Page::where('id',1)->first();
+        return view('admin.page_room', compact('page_data'));
+    }
+
+    public function rooms_update(Request $request)
+    {
+        $obj = Page::where('id',1)->first();
+        $obj->room_heading = $request->room_heading;
+        $obj->update();
+       return redirect()->back()->with('success','Room data is updated successfully');
+    }
 
 }

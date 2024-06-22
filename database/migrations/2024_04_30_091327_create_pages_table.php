@@ -44,6 +44,7 @@ return new class extends Migration
             $table->integer('signup_status');
             $table->text('signin_heading');
             $table->integer('signin_status');
+            $table->text('room_heading');
             $table->timestamps();
         });
     }

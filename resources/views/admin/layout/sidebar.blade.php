@@ -37,7 +37,8 @@
                 Request::is('/admin/page/checkout/edit')||
                 Request::is('/admin/page/payment/edit')||
                 Request::is('/admin/page/signup/edit')||
-                Request::is('/admin/page/signin/edit')
+                Request::is('/admin/page/signin/edit')||
+                Request::is('/admin/page/rooms/edit')
                 ? 'active':'' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="fa fa-hand-o-right"></i><span>Pages</span></a>
                 <ul class="dropdown-menu">
@@ -68,10 +69,12 @@
 
                     <li class="{{ Request::is('/admin/page/signin/edit')? 'active':'' }}"><a class="nav-link" href="{{ route('signin_edit') }}"><i class="fa fa-angle-right"></i>SignIn</a></li>
 
-                    
+                    <li class="{{ Request::is('/admin/page/rooms/edit')? 'active':'' }}"><a class="nav-link" href="{{ route('rooms_edit') }}"><i class="fa fa-angle-right"></i>Room</a></li>
 
                 </ul>
             </li>
+
+            <li class="{{ Request::is('/admin/customers/view')? 'active':'' }}"><a class="nav-link" href="{{ route('admin_customers') }}"><i class="fa fa-hand-o-right"></i> <span>Customers</span></a></li>
 
             <li class="{{ Request::is('admin/slider/view')? 'active':'' }}"><a class="nav-link" href="{{ route('slide_view') }}"><i class="fa fa-hand-o-right"></i> <span>Slide</span></a></li>
             
