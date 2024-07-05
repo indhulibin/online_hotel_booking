@@ -42,7 +42,18 @@
                         <ul class="right">
 
                             @if($global_page_data->cart_status == 1)
-                            <li class="menu"><a href="{{ route('cart_view') }}">{{$global_page_data->cart_heading}}</a></li>
+                            <li class="menu">
+                                <a href="{{ route('cart_view') }}">{{$global_page_data->cart_heading}}</a>
+                                <sup style="color: red;">
+                                    @php
+                                    $cartItemsCount = count(session()->get('cart_room_id', []));
+                                    if( $cartItemsCount)
+                                    {
+                                        echo  $cartItemsCount;
+                                    }
+                                    @endphp
+                                </sup>
+                            </li>
                             @endif
 
                             @if($global_page_data->cart_status == 1)

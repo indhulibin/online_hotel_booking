@@ -1,4 +1,4 @@
-@extends('customer.layout.app')
+@extends('admin.layout.app')
 @section('heading','Invoice')
 @section('mainContent')
 <div class="section-body">
@@ -15,11 +15,11 @@
                         <div class="col-md-6">
                             <address>
                                 <strong>Invoice To</strong><br>
-                                {{Auth::guard('customer')->user()->name}}<br>
-                                {{Auth::guard('customer')->user()->address}}<br>
-                                {{Auth::guard('customer')->user()->state}},
-                                {{Auth::guard('customer')->user()->city}},
-                                {{Auth::guard('customer')->user()->zip}}<br>
+                                {{$custmer_data->name}}<br>
+                                {{$custmer_data->address}}<br>
+                                {{$custmer_data->state}},
+                                {{$custmer_data->city}},
+                                {{$custmer_data->zip}}<br> 
                             </address>
                         </div>
                         <div class="col-md-6 text-md-right">

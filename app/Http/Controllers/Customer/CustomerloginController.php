@@ -8,9 +8,25 @@ use App\Models\Customer;
 use App\Mail\Websitemail;
 use Auth;
 use Hash;
+use App\Services\SessionService;
 
 class CustomerloginController extends Controller
 {
+
+    protected $sessionService;
+
+    public function __construct(SessionService $sessionService)
+    {
+        $this->sessionService = $sessionService;
+    }
+
+    public function logoutFromAllDevices()
+    {
+        $userId = Auth::id();
+        $this->sessionService->signOutFromAllDevices($userId);
+        return redirect()->route('customer_login')->with('status', 'You have been logged out from all devices.');;
+    }
+
     public function index()
     {
         return view('front.login');
@@ -31,15 +47,6 @@ class CustomerloginController extends Controller
             ];
             if(Auth::guard('customer')->attempt( $credential))
             {
-                // $customer = Auth::guard('customer')->user();
-
-                //         // Check the status of the customer
-                //         if ($customer->status == 0) {
-                //             // Log the customer out if their status is 0
-                //             Auth::guard('customer')->logout();
-
-                //             return redirect()->route('customer_login')->with('error', 'Please check your email and click on the link for verification.');
-                //         }
                 return redirect()->route('customer_home');
             }
             else 

@@ -9,10 +9,10 @@
                 </div>
                 <div class="card-wrap">
                     <div class="card-header">
-                        <h4>Total News Categories</h4>
+                        <h4>Total Completed Orders</h4>
                     </div>
                     <div class="card-body">
-                        12
+                       {{ $total_completed_orders }}
                     </div>
                 </div>
             </div>
@@ -24,10 +24,10 @@
                 </div>
                 <div class="card-wrap">
                     <div class="card-header">
-                        <h4>Total News</h4>
+                        <h4>Total Pending Orders</h4>
                     </div>
                     <div class="card-body">
-                        122
+                        {{ $total_pending_orders }}
                     </div>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                         <h4>Total Users</h4>
                     </div>
                     <div class="card-body">
-                        45
+                        {{ $total_active_customer }}
                     </div>
                 </div>
             </div>

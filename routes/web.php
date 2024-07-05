@@ -17,7 +17,8 @@ use App\Http\Controllers\Admin\AdminSubscriberController;
 use App\Http\Controllers\Admin\AdminAmenityController;
 use App\Http\Controllers\Admin\AdminRoomController;
 use App\Http\Controllers\Admin\AdminCustomerController;
-
+use App\Http\Controllers\Admin\AdminOrderController;
+use App\Http\Controllers\Admin\AdminDateWiseController;
 
 use App\Http\Controllers\Front\HomeController;
 use App\Http\Controllers\Front\AboutController;
@@ -96,7 +97,8 @@ Route::post('/payment/stripe/{price}',[BookingController::class,'stripe'])->name
 //CustomerloginController
 Route::get('/login',[CustomerloginController::class,'index'])->name('customer_login');
 Route::post('/login/submit',[CustomerloginController::class,'loginSubmit'])->name('customer_login_submit');
-Route::get('/logout',[CustomerloginController::class,'logout'])->name('customer_logout');
+//Route::get('/logout',[CustomerloginController::class,'logout'])->name('customer_logout');
+Route::get('/logout-all-devices', [CustomerloginController::class, 'logoutFromAllDevices'])->name('customer_logout')->middleware('customer');
 Route::get('/signup',[CustomerloginController::class,'signup'])->name('customer_signup');
 Route::post('/signup/submit',[CustomerloginController::class,'signupSubmit'])->name('customer_signup_submit');
 Route::get('/signup/verify/{email}/{token}',[CustomerloginController::class,'verify'])->name('customer_verify');
@@ -119,7 +121,7 @@ Route::group(['middleware' =>['customer:customer']],function () {
     Route::get('/customer/order/view',[CustomerOrderContrller::class,'index'])->name('customer_order_view');
     Route::get('/customer/invoice/{id}',[CustomerOrderContrller::class,'invoice'])->name('customer_invoice');
 
-
+    
 });
 
 /* Admin */
@@ -285,4 +287,17 @@ Route::group(['middleware' =>['admin:admin']],function () {
     //AdminCustomerController
     Route::get('/admin/customers/view',[AdminCustomerController::class,'index'])->name('admin_customers');
     Route::get('/admin/customers/status/change/{id}',[AdminCustomerController::class,'statusChange'])->name('customer_status_change');
+
+    //AdminOrderController
+    Route::get('/admin/order/view',[AdminOrderController::class,'index'])->name('admin_order_view');
+    Route::get('/admin/invoice/{id}',[AdminOrderController::class,'invoice'])->name('admin_invoice');
+    Route::get('/admin/order/delete/{id}',[AdminOrderController::class,'delete'])->name('admin_order_delete');
+
+    //AdminDateWiseController
+    Route::get('admin/date_wise_room/available',[AdminDateWiseController::class,'index'])->name('datewise_room_available');
+    Route::post('admin/date_wise_room/available/submit',[AdminDateWiseController::class,'show'])->name('admin_datewise_room_submit');
+
 });
+
+
+

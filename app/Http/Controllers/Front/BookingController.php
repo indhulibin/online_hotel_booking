@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Session;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\BookedRoom;
 use Auth;
 use DateTime;
 use DB;
@@ -16,30 +17,96 @@ use App\Mail\Websitemail;
 use Stripe;
 
 
+
 class BookingController extends Controller
 {
+    // public function booking_submit(Request $request)
+    // {
+    //     //Validation
+    //     $request->validate([
+    //         'room_id' => 'required',
+    //         'checkin_checkout' => 'required',
+    //         'adult' => 'required'
+    //     ]);
+
+    //     $dates = explode(' - ',$request->checkin_checkout);
+    //     $checkin = $dates[0];
+    //     $checkout = $dates[1];
+        
+       
+    //     session()->push('cart_room_id',$request->room_id);
+    //     session()->push('cart_checkin_date',$checkin);
+    //     session()->push('cart_checkout_date',$checkout);
+    //     session()->push('cart_adult',$request->adult);
+    //     session()->push('cart_children',$request->children);
+    //     return redirect()->route('cart_view')->with('success','Room is added to the cart successfully');
+    // }
+
     public function booking_submit(Request $request)
-    {
-        //Validation
-        $request->validate([
-            'room_id' => 'required',
-            'checkin_checkout' => 'required',
-            'adult' => 'required'
-        ]);
+{
+    // Validation
+    $request->validate([
+        'room_id' => 'required',
+        'checkin_checkout' => 'required',
+        'adult' => 'required'
+    ]);
 
-        $dates = explode(' - ',$request->checkin_checkout);
-        $checkin = $dates[0];
-        $checkout = $dates[1];
+    // Extract check-in and check-out dates
+    $dates = explode(' - ', $request->checkin_checkout);
+    $checkin = \DateTime::createFromFormat('d/m/Y', trim($dates[0]));
+    $checkout = \DateTime::createFromFormat('d/m/Y', trim($dates[1]));
 
+    // Get the total number of rooms for the selected room type
+    $totalRooms = DB::table('rooms')->where('id', $request->room_id)->value('total_rooms');
 
-        session()->push('cart_room_id',$request->room_id);
-        session()->push('cart_checkin_date',$checkin);
-        session()->push('cart_checkout_date',$checkout);
-        session()->push('cart_adult',$request->adult);
-        session()->push('cart_children',$request->children);
-        return redirect()->route('cart_view')->with('success','Room is added to the cart successfully');
+    // Get session data
+    $cartRoomIds = session()->get('cart_room_id', []);
+    $cartCheckinDates = session()->get('cart_checkin_date', []);
+    $cartCheckoutDates = session()->get('cart_checkout_date', []);
+
+    // Initialize booking counts for each date
+    $bookingCounts = [];
+
+    // Create a period from check-in to check-out dates
+    $period = new \DatePeriod($checkin, new \DateInterval('P1D'), $checkout->modify('+1 day'));
+    foreach ($period as $date) {
+        $formattedDate = $date->format('d/m/Y');
+        $bookingCounts[$formattedDate] = 0;
+
+        // Check the booking count in the session
+        foreach ($cartRoomIds as $index => $cartRoomId) {
+            if ($cartRoomId == $request->room_id) {
+                $cartCheckin = \DateTime::createFromFormat('d/m/Y', $cartCheckinDates[$index]);
+                $cartCheckout = \DateTime::createFromFormat('d/m/Y', $cartCheckoutDates[$index]);
+
+                if ($date >= $cartCheckin && $date <= $cartCheckout) {
+                    $bookingCounts[$formattedDate]++;
+                }
+            }
+        }
+
+        // Check if the room is fully booked for the date
+        if ($bookingCounts[$formattedDate] >= $totalRooms) {
+            $unavailableDates[] = $formattedDate;
+        }
     }
 
+    // Check if there are any unavailable dates
+    if (!empty($unavailableDates)) {
+        $errorMessage = 'The room is not available for the following dates: ' . implode(', ', $unavailableDates);
+        return redirect()->route('home')->with('error', $errorMessage);
+    }
+
+   // Add booking details to session
+   session()->push('cart_room_id', $request->room_id);
+   session()->push('cart_checkin_date', $checkin->format('d/m/Y'));
+   session()->push('cart_checkout_date', $checkout->format('d/m/Y'));
+   session()->push('cart_adult', $request->adult);
+   session()->push('cart_children', $request->children);
+
+   // Redirect to cart view if booking is successful
+   return redirect()->route('cart_view')->with('success', 'Room is added to the cart successfully');
+}
     public function cart_view()
     {
         return view('front.cart');
@@ -200,7 +267,7 @@ class BookingController extends Controller
         $provider->getAccessToken();
         $response = $provider->capturePaymentOrder($request->token);
         //dd($response);
-        $order_no = md5(time());
+        $order_no = time();
         $statement = DB::select("SHOW TABLE STATUS LIKE 'orders'");
         $ai_id = $statement[0]->Auto_increment;
 
@@ -340,7 +407,7 @@ class BookingController extends Controller
         $transcation_id = $responseJson['balance_transaction'];
         $last_4 = $responseJson['payment_method_details']['card']['last4'];
 
-        $order_no = md5(time());
+        $order_no = time();
         $statement = DB::select("SHOW TABLE STATUS LIKE 'orders'");
         $ai_id = $statement[0]->Auto_increment;
 
@@ -413,6 +480,30 @@ class BookingController extends Controller
             $obj->children = $arr_cart_children[$i] ;
             $obj->subtotal = $subtotal;
             $obj->save();
+        }
+        for ($i = 0; $i < count($arr_cart_room_id); $i++) {
+            $checkinDate = \DateTime::createFromFormat('d/m/Y', $arr_cart_checkin_date[$i]);
+            $checkoutDate = \DateTime::createFromFormat('d/m/Y', $arr_cart_checkout_date[$i]);
+    
+            // Check if dates were created successfully
+            if ($checkinDate === false || $checkoutDate === false) {
+                return redirect()->route('checkout')->with('error', 'Invalid date format.');
+            }
+    
+            // Define the interval as one day
+            $interval = new \DateInterval('P1D');
+    
+            // Create the date period, excluding the checkout date
+            $datePeriod = new \DatePeriod($checkinDate, $interval, $checkoutDate);
+    
+            // Iterate over the period to get all dates excluding the checkout date
+            foreach ($datePeriod as $date) {
+                $obj = new BookedRoom();
+                $obj->booking_date = $date->format('d/m/Y');
+                $obj->room_id = $arr_cart_room_id[$i];
+                $obj->order_no = $order_no;
+                $obj->save();
+            }
         }
          // Send email
          $subject = 'New order';

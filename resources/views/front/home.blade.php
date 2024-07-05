@@ -40,7 +40,7 @@
                         </div>
                         <div class="col-lg-3">
                             <div class="form-group">
-                                <input type="text" name="checkin_checkout" class="form-control daterange1" placeholder="Checkin & Checkout">
+                                <input type="text" name="checkin_checkout" class="form-control daterange1" placeholder="Checkin & Checkout" readonly>
                             </div>
                         </div>
                         <div class="col-lg-2">
@@ -210,4 +210,156 @@
 @endforeach
 @endif
 
+
+
+{{-- <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const bookedDates = @json($booked_dates);
+    
+        const disabledDates = bookedDates.reduce((acc, date) => {
+            if (!acc[date.room_id]) {
+                acc[date.room_id] = [];
+            }
+            acc[date.room_id].push(date.booking_date);
+            return acc;
+        }, {});
+    
+        // Initialize date picker without any restrictions
+        $('.daterange1').daterangepicker({
+            autoUpdateInput: false,  // Ensure input is not auto-populated
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+    
+        // Handle room selection change event
+        document.querySelector('select[name="room_id"]').addEventListener('change', function() {
+            const roomId = this.value;
+            const $datePicker = $('.daterange1');
+    
+            if (roomId && disabledDates[roomId]) {
+                $datePicker.daterangepicker({
+                    minDate: moment().startOf('day'), // Disable previous dates
+                    isInvalidDate: function(date) {
+                        return disabledDates[roomId].includes(date.format('DD/MM/YYYY'));
+                    },
+                    locale: {
+                        format: 'DD/MM/YYYY'
+                    }
+                });
+    
+               
+            } else {
+                // Reset the date picker if no room is selected
+                $datePicker.daterangepicker({
+                    minDate: moment().startOf('day'), // Disable previous dates
+                    locale: {
+                        format: 'DD/MM/YYYY'
+                    }
+                });
+            }
+        });
+    });
+</script>  --}}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const bookedDates = @json($booked_dates);
+    
+        const disabledDates = bookedDates.reduce((acc, date) => {
+            if (!acc[date.room_id]) {
+                acc[date.room_id] = [];
+            }
+            acc[date.room_id].push(date.booking_date);
+            return acc;
+        }, {});
+    
+        // Initialize date picker without any restrictions
+        $('.daterange1').daterangepicker({
+            autoUpdateInput: false,  // Ensure input is not auto-populated
+            locale: {
+                cancelLabel: 'Clear',
+                format: 'DD/MM/YYYY'
+            },
+            minDate: moment().startOf('day')  // Disable previous dates
+        });
+    
+        $('.daterange1').on('apply.daterangepicker', function(ev, picker) {
+            const roomId = document.querySelector('select[name="room_id"]').value;
+            const startDate = picker.startDate.format('DD/MM/YYYY');
+            const endDate = picker.endDate.format('DD/MM/YYYY');
+    
+            if (roomId && disabledDates[roomId]) {
+                const unavailableDates = disabledDates[roomId];
+    
+                // Check if any date in the selected range is unavailable
+                let isUnavailable = false;
+                for (let date = picker.startDate.clone(); date.isSameOrBefore(picker.endDate); date.add(1, 'days')) {
+                    if (unavailableDates.includes(date.format('DD/MM/YYYY'))) {
+                        isUnavailable = true;
+                        break;
+                    }
+                }
+    
+                if (isUnavailable) {
+                    alert("One or more dates in the selected range are unavailable. Please choose different dates.");
+                    $(this).val('');  // Clear the input field
+                } else {
+                    $(this).val(startDate + ' - ' + endDate);
+                }
+            } else {
+                $(this).val(startDate + ' - ' + endDate);
+            }
+        });
+    
+        $('.daterange1').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');  // Clear the input field on cancel
+        });
+    
+        // Handle room selection change event
+        document.querySelector('select[name="room_id"]').addEventListener('change', function() {
+            const roomId = this.value;
+            const $datePicker = $('.daterange1');
+    
+            if (roomId && disabledDates[roomId]) {
+                $datePicker.daterangepicker({
+                
+                    minDate: moment().startOf('day'), // Disable previous dates
+                    isInvalidDate: function(date) {
+                        return disabledDates[roomId].includes(date.format('DD/MM/YYYY'));
+                    },
+                    locale: {
+                        cancelLabel: 'Clear',
+                        format: 'DD/MM/YYYY'
+                    }
+                });
+            } else {
+                // Reset the date picker if no room is selected
+                $datePicker.daterangepicker({
+                   
+                    minDate: moment().startOf('day'), // Disable previous dates
+                    locale: {
+                        cancelLabel: 'Clear',
+                        format: 'DD/MM/YYYY'
+                    }
+                });
+            }
+    
+            // Ensure the date range input remains empty on room selection change
+            $datePicker.val('');
+        });
+    });
+    </script>
+
+<script>
+    $(function() {
+        $('.daterange1').daterangepicker({
+            autoUpdateInput: false,  // Ensure input is not auto-populated
+            locale: {
+                format: 'DD/MM/YYYY'
+            },
+            minDate: moment().startOf('day'), // Disable previous days
+            // Add additional options as needed
+        });
+    });
+</script>
 @endsection

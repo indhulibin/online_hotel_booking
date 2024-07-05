@@ -74,7 +74,11 @@
                 </ul>
             </li>
 
-            <li class="{{ Request::is('/admin/customers/view')? 'active':'' }}"><a class="nav-link" href="{{ route('admin_customers') }}"><i class="fa fa-hand-o-right"></i> <span>Customers</span></a></li>
+            <li class="{{ Request::is('admin/customers/view')? 'active':'' }}"><a class="nav-link" href="{{ route('admin_customers') }}"><i class="fa fa-hand-o-right"></i> <span>Customers</span></a></li>
+
+            <li class="{{ Request::is('admin/orders/view')? 'active':'' }}"><a class="nav-link" href="{{ route('admin_order_view') }}"><i class="fa fa-hand-o-right"></i> <span>Orders</span></a></li>
+
+            <li class="{{ Request::is('admin/date_wise_room/available')? 'active':'' }}"><a class="nav-link" href="{{ route('datewise_room_available') }}"><i class="fa fa-hand-o-right"></i> <span>Check Room Availability</span></a></li>
 
             <li class="{{ Request::is('admin/slider/view')? 'active':'' }}"><a class="nav-link" href="{{ route('slide_view') }}"><i class="fa fa-hand-o-right"></i> <span>Slide</span></a></li>
             
@@ -103,6 +107,8 @@
 
             </ul>
         </li>
+
+       
 
            <!-- <li class=""><a class="nav-link" href="setting.html"><i class="fa fa-hand-o-right"></i> <span>Setting</span></a></li>
 
